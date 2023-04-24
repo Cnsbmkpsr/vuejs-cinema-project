@@ -1,6 +1,6 @@
 # **Cinema Project**
 
-This is the Cinema Project, a web application for browsing and searching movies and series using the **[The Movie DataBase API](https://www.themoviedb.org/documentation/api)**. The project is built with Vue.js 3, TypeScript, Vuex, Vue Router, Axios, and Tailwind CSS.
+This is the Cinema Project, a web application for browsing and searching movies and series using the **[The Movie DataBase API](https://www.themoviedb.org/documentation/api)**. The project is built with Vue.js 3, TypeScript, Vuex, Vue Router, and Tailwind CSS.
 
 ## **Installation Choices**
 
