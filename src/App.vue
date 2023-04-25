@@ -7,4 +7,8 @@ import '@/assets/main.css'
   <RouterView />
 </template>
 
-<style scoped></style>
+<style>
+body {
+  background-color: #e0e7ff;
+}
+</style>
