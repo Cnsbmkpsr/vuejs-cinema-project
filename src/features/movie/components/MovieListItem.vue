@@ -1,6 +1,7 @@
 <!-- MovieListItem.vue -->
 <template>
   <div
+    @click="goToMovieDetails"
     class="col-span-2 scale-100 py-16 sm:mx-auto sm:max-w-xl md:scale-100 lg:col-span-1 lg:scale-90 xl:scale-100"
   >
     <div
@@ -18,15 +19,26 @@
           <h2 class="text-3xl font-bold">{{ movie.title }}</h2>
           <div class="rounded-xl bg-yellow-400 p-2 font-bold">{{ movie.vote_average }}</div>
         </div>
-        <div>
-          <div class="text-sm text-gray-400">{{ movie.media_type }}</div>
-          <div class="text-lg text-gray-800">
-            {{ movie.release_date?.substring(0, 4) }}
+        <div class="flex flex-col w-1/2 space-y-4">
+          <div class="flex justify-between items-start">
+            <h2 class="text-3xl font-bold">{{ movie.title }}</h2>
+            <div class="bg-yellow-400 font-bold rounded-xl p-2">{{ movie.vote_average }}</div>
           </div>
+          <div>
+            <div class="text-sm text-gray-400">{{ movie.media_type }}</div>
+            <div class="text-lg text-gray-800">
+              {{ movie.release_date?.substring(0, 4) }}
+            </div>
+          </div>
+          <p class="text-gray-400 max-h-40 overflow-y-hidden">
+            {{ movie.overview }}
+          </p>
         </div>
+        <<<<<<< HEAD
         <p class="max-h-40 overflow-y-hidden text-gray-400">
           {{ movie.overview }}
         </p>
+        ======= >>>>>>> 5cd4694 (Feat: User can click on a movie and see details)
       </div>
     </div>
   </div>
@@ -34,6 +46,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { useRouter } from 'vue-router'
 import type { Movie } from '../types'
 
 export default defineComponent({
@@ -41,6 +54,18 @@ export default defineComponent({
     movie: {
       type: Object as () => Movie,
       required: true
+    }
+  },
+  setup(props) {
+    const router = useRouter()
+
+    const goToMovieDetails = () => {
+      router.push({ name: 'MovieDetails', params: { id: props.movie.id } })
+    }
+
+    return {
+      movie: props.movie,
+      goToMovieDetails
     }
   }
 })
