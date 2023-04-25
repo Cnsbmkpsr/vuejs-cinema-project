@@ -1,20 +1,34 @@
+import type { Observable } from 'rxjs'
+
 export type Movie = {
   id: number
   title: string
-  originalTitle?: string
+  original_title?: string
   name?: string
-  originalName?: string
-  mediaType: 'movie' | 'tv'
+  original_name?: string
+  media_type: 'movie' | 'tv'
   overview: string
-  voteAverage: number
-  voteCount: number
-  releaseDate?: string
-  firstAirDate?: string
-  genreIds: number[]
+  vote_average: number
+  vote_count: number
+  release_date?: string
+  first_air_date?: string
+  genre_ids: number[]
   popularity: number
-  posterPath?: string
-  backdropPath?: string
+  poster_path?: string
+  backdrop_path?: string
   adult?: boolean
 }
 
+export type PaginatedResponse<T> = {
+  page: number
+  results: T
+  total_pages: number
+  total_results: number
+}
+
 export type TVSeries = Movie
+
+export interface MoviesServiceInterface {
+  getMovies(page?: number): Observable<PaginatedResponse<Movie[]>>
+  getMovie(id: number): Observable<Movie>
+}
