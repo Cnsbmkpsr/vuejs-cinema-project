@@ -16,9 +16,7 @@
     "pinia": "2.0.32",
     "rxjs": "^7.8.0",
     "vue": "^3.2.47",
-    "vue-next-rx": "^0.1.1",
-    "vue-router": "4.1.6",
-    "vue-rx": "^6.2.0"
+    "vue-router": "4.1.6"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "1.2.0",
