@@ -1,26 +1,38 @@
+// store.ts
 import { ref } from 'vue'
 import type { Movie } from './types'
 import { defineStore } from 'pinia'
+import { ajax } from 'rxjs/ajax'
+import { map, catchError } from 'rxjs/operators'
 
-export const useTaskStore = defineStore('movies', () => {
+const apiKey = import.meta.env.VITE_MOVIE_API_KEY
+
+const fetchMovies = async () => {
+  try {
+    const response = await fetch(
+      `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&sort_by=popularity.desc`
+    )
+    const data = await response.json()
+    return data.results as Movie[]
+  } catch (error) {
+    console.error('Error fetching movies:', error)
+    return []
+  }
+}
+
+export const useMovieStore = defineStore('movies', () => {
   const movies = ref<Movie[]>([])
 
-  const addMovie = (movie: Movie) => {
-    movies.value.push(movie)
-  }
-
-  const removeMovie = (id: number) => {
-    movies.value = movies.value.filter((movie) => movie.id !== id)
-  }
-
-  const updateMovie = (movie: Movie) => {
-    movies.value = movies.value.map((m) => (m.id === movie.id ? movie : m))
+  const loadMovies = async () => {
+    console.log('load movies')
+    const fetchedMovies = await fetchMovies()
+    console.log('Fetched movies:', fetchedMovies)
+    movies.value = fetchedMovies
+    console.log('movie value', movies.value)
   }
 
   return {
     movies,
-    addMovie,
-    removeMovie,
-    updateMovie
+    loadMovies
   }
 })
