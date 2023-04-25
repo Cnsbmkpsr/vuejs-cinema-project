@@ -2,7 +2,7 @@
 <template>
   <div class="py-16 col-span-2 lg:col-span-1 sm:max-w-xl sm:mx-auto">
     <div
-      class="bg-white shadow-lg border-gray-100 max-h-80 border sm:rounded-3xl p-8 flex space-x-8"
+      class="bg-white transition-all duration-300 shadow-lg hover:shadow-2xl hover:cursor-pointer border-gray-100 max-h-80 border sm:rounded-3xl p-8 flex space-x-8"
     >
       <div class="h-48 overflow-visible w-1/2">
         <img
