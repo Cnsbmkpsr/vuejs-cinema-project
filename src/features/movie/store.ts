@@ -1,9 +1,7 @@
 // store.ts
-import { ref } from 'vue'
 import type { Movie } from './types'
 import { defineStore } from 'pinia'
-import { ajax } from 'rxjs/ajax'
-import { map, catchError } from 'rxjs/operators'
+import { BehaviorSubject } from 'rxjs'
 
 const apiKey = import.meta.env.VITE_MOVIE_API_KEY
 
@@ -21,14 +19,13 @@ const fetchMovies = async () => {
 }
 
 export const useMovieStore = defineStore('movies', () => {
-  const movies = ref<Movie[]>([])
+  const movies = new BehaviorSubject<Movie[]>([])
 
   const loadMovies = async () => {
     console.log('load movies')
     const fetchedMovies = await fetchMovies()
     console.log('Fetched movies:', fetchedMovies)
-    movies.value = fetchedMovies
-    console.log('movie value', movies.value)
+    movies.next(fetchedMovies)
   }
 
   return {

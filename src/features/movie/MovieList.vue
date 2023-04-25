@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import { useMovieStore } from './store'
 import MovieListItem from './components/MovieListItem.vue'
 
@@ -22,17 +22,17 @@ export default defineComponent({
     onMounted(() => {
       console.log('onMounted')
       movieStore.loadMovies()
+      const subscription = movieStore.movies.subscribe((value) => {
+        movies.value = value
+      })
+
+      // Unsubscribe from the movies BehaviorSubject when the component is unmounted
+      return () => {
+        subscription.unsubscribe()
+      }
     })
 
     console.log('initial movies value:', movies.value)
-
-    watch(
-      () => movieStore.movies,
-      (newValue) => {
-        console.log('movies updated:', newValue)
-        movies.value = newValue
-      }
-    )
 
     return {
       movies
