@@ -14,22 +14,33 @@
 </template>
 
 <script setup lang="ts">
+import { debounceTime, distinctUntilChanged, filter, fromEvent, map, switchMap, tap } from 'rxjs'
 import { ref, watchEffect } from 'vue'
-import { inputDebounce$ } from '../utils/inputDebounce'
+import { useMovieStore } from '../../movie/store'
 
 const emit = defineEmits(['debouncedSearch'])
 
 const inputRef = ref<HTMLInputElement>()
+const movieStore = useMovieStore()
 
 watchEffect(() => {
   if (!inputRef.value) return
 
-  const inputRefSubscription = inputDebounce$(inputRef.value).subscribe((value) => {
-    emit('debouncedSearch', value)
-  })
+  const inputObservable = fromEvent(inputRef.value, 'input').pipe(
+    map((event: Event) => (event.target as HTMLInputElement).value),
+    filter((value: string) => value.length >= 3 || value.length === 0),
+    debounceTime(500),
+    distinctUntilChanged(),
+    switchMap((value: string) => movieStore.searchMovies(value)),
+    tap((results) => {
+      emit('debouncedSearch', results)
+    })
+  )
+
+  const subscription = inputObservable.subscribe()
 
   return () => {
-    inputRefSubscription.unsubscribe()
+    subscription.unsubscribe()
   }
 })
 </script>

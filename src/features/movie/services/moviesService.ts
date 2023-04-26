@@ -68,4 +68,27 @@ export class MoviesService implements MoviesServiceInterface {
       first()
     )
   }
+
+  searchMovies = (query: string): Observable<Movie[]> => {
+    if (!query) {
+      return of([])
+    }
+
+    return ajax({
+      url: `${BASE_URL}/search/movie`,
+      queryParams: {
+        api_key: apiKey,
+        query
+      }
+    }).pipe(
+      map((result) => {
+        return result.response.results as Movie[]
+      }),
+      catchError((error) => {
+        console.error('Error searching movies:', error)
+        return of([])
+      }),
+      first()
+    )
+  }
 }

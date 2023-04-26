@@ -20,6 +20,7 @@ import TheHeader from '../components/TheHeader.vue'
 import SearchInput from '../features/search/components/SearchInput.vue'
 import { useGenreStore } from '../features/genre/store'
 import GenresList from '../features/genre/components/GenresList.vue'
+import type { Movie } from '@/features/movie/types'
 
 const moviesListElement = ref<HTMLElement>()
 const inputSearch = ref<HTMLInputElement>()
@@ -30,8 +31,11 @@ const genresStore = useGenreStore()
 movieStore.loadMovies()
 genresStore.loadGenres()
 
-const handleSearch = (value: string) => {
-  // TODO : Implement search
-  console.log(value)
+const handleSearch = (searchResults: Movie[]) => {
+  if (searchResults.length === 0) {
+    movieStore.loadMovies()
+  } else {
+    movieStore.updateMovies(searchResults)
+  }
 }
 </script>

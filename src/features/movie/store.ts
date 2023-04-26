@@ -42,6 +42,14 @@ export const useMovieStore = defineStore('movies', () => {
     return moviesService.getGenres()
   }
 
+  const searchMovies = (query: string): Observable<Movie[]> => {
+    return moviesService.searchMovies(query)
+  }
+
+  const updateMovies = (newMovies: Movie[]) => {
+    movies.value = newMovies
+  }
+
   return {
     movies,
     page,
@@ -49,6 +57,8 @@ export const useMovieStore = defineStore('movies', () => {
     loadMovies,
     getMovie,
     getGenres,
-    fetchNextPage
+    fetchNextPage,
+    searchMovies,
+    updateMovies
   }
 })
