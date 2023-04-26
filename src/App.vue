@@ -11,4 +11,10 @@ import '@/assets/main.css'
 body {
   background-color: #e0e7ff;
 }
+
+#app {
+  max-width: 1280px;
+  width: 95%;
+  margin: auto;
+}
 </style>
