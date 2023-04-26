@@ -19,8 +19,9 @@
 </template>
 
 <script lang="ts">
+import { useMovieStore } from '@/features/movie/store'
 import { defineComponent, onMounted, ref } from 'vue'
-import { useMovieStore } from '../store'
+
 import { useRouter, useRoute } from 'vue-router'
 
 export default defineComponent({
