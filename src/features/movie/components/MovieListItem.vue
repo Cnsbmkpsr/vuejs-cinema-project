@@ -1,6 +1,8 @@
 <!-- MovieListItem.vue -->
 <template>
-  <div class="py-16 col-span-2 lg:col-span-1 sm:max-w-xl sm:mx-auto">
+  <div
+    class="py-16 col-span-2 lg:col-span-1 xl:scale-100 lg:scale-90 md:scale-100 scale-100 sm:max-w-xl sm:mx-auto"
+  >
     <div
       class="bg-white transition-all duration-300 shadow-lg hover:shadow-2xl hover:cursor-pointer border-gray-100 max-h-80 border sm:rounded-3xl p-8 flex space-x-8"
     >
