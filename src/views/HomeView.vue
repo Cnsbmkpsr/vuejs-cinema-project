@@ -1,31 +1,30 @@
 <template>
-  <h1 class="text-3xl">Movie List</h1>
+  <TheHeader title="Movies">
+    <template v-slot:search>
+      <SearchInput @debounced-search="handleSearch($event)" />
+    </template>
+  </TheHeader>
   <div class="grid grid-cols-2" ref="moviesListElement">
     <MovieListItem v-for="movie in movieStore.movies" :key="movie.id" :movie="movie" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 import MovieListItem from '../features/movie/components/MovieListItem.vue'
 import { useMovieStore } from '../features/movie/store'
-import { onScrollBottom$ } from '../features/movie/utils/onScrollBottom'
+import TheHeader from '../components/TheHeader.vue'
+import SearchInput from '../features/search/components/SearchInput.vue'
 
 const moviesListElement = ref<HTMLElement>()
+const inputSearch = ref<HTMLInputElement>()
 
 const movieStore = useMovieStore()
 
 movieStore.loadMovies()
 
-watchEffect(() => {
-  if (!moviesListElement.value) return
-
-  const scrollButtonSubscription = onScrollBottom$(moviesListElement.value).subscribe(() => {
-    movieStore.fetchNextPage()
-  })
-
-  return () => {
-    scrollButtonSubscription.unsubscribe()
-  }
-})
+const handleSearch = (value: string) => {
+  // TODO : Implement search
+  console.log(value)
+}
 </script>
