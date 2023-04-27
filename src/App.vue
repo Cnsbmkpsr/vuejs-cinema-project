@@ -1,11 +1,15 @@
-<script setup lang="ts">
-import { RouterView } from 'vue-router'
-import '@/assets/main.css'
-</script>
-
 <template>
   <RouterView />
 </template>
+
+<script setup lang="ts">
+import { RouterView } from 'vue-router'
+import '@/assets/main.css'
+import { provide } from 'vue'
+import { setupContainer } from './container.config'
+
+provide('container', setupContainer())
+</script>
 
 <style>
 body {
