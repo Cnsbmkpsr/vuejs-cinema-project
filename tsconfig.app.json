@@ -5,6 +5,10 @@
   "compilerOptions": {
     "composite": true,
     "baseUrl": ".",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "lib": ["es6", "dom"],
+    "types": ["reflect-metadata"],
     "paths": {
       "@/*": ["./src/*"]
     }
