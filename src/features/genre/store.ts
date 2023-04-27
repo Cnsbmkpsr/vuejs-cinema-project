@@ -1,7 +1,9 @@
+// src/features/genre/store.ts
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { Genre } from './types'
 import { MoviesService } from '../movie/services/moviesService'
+import type { Observable } from 'rxjs'
 
 export const useGenreStore = defineStore('genres', () => {
   const genres = ref<Genre[]>([])
@@ -9,19 +11,9 @@ export const useGenreStore = defineStore('genres', () => {
   const moviesService = new MoviesService()
 
   const loadGenres = async () => {
-    genres.value = [
-      'Action',
-      'Adventure',
-      'Animation',
-      'Comedy',
-      'Crime',
-      'Documentary',
-      'Drama',
-      'Family',
-      'Fantasy',
-      'History'
-    ]
-    // TODO : load genres from the moviesService
+    moviesService.getGenres().subscribe((response) => {
+      genres.value = response.map((genre) => ({ id: genre.id, name: genre.name }))
+    })
   }
 
   const selectGenre = (genre: Genre) => {
@@ -36,5 +28,9 @@ export const useGenreStore = defineStore('genres', () => {
     return selectedGenre.value.includes(genre)
   }
 
-  return { genres, loadGenres, selectGenre, unselectGenre, isSelected }
+  const getGenres = (): Observable<Genre[]> => {
+    return moviesService.getGenres()
+  }
+
+  return { genres, loadGenres, selectGenre, unselectGenre, isSelected, getGenres, selectedGenre }
 })

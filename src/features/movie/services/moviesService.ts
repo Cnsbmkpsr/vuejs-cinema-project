@@ -4,21 +4,23 @@ import { first, from, of, type Observable } from 'rxjs'
 import { ajax } from 'rxjs/ajax'
 
 import type { Genre, Movie, MoviesServiceInterface, PaginatedResponse } from '../types'
-import { fromFetch } from 'rxjs/fetch'
-import { catchError, map, mergeMap, filter } from 'rxjs/operators'
+import { catchError, map } from 'rxjs/operators'
 
 const apiKey = import.meta.env.VITE_MOVIE_API_KEY
 const BASE_URL = 'https://api.themoviedb.org/3'
 
 export class MoviesService implements MoviesServiceInterface {
-  getMovies(page?: number): Observable<PaginatedResponse<Movie[]>> {
+  getMovies(page?: number, selectedGenres: Genre[] = []): Observable<PaginatedResponse<Movie[]>> {
+    const genreFilter =
+      selectedGenres.length > 0
+        ? `&with_genres=${selectedGenres.map((genre) => genre.id).join(',')}`
+        : ''
+
     return ajax({
-      url: 'https://api.themoviedb.org/3/discover/movie',
-      queryParams: {
-        api_key: apiKey,
-        sort_by: 'popularity.desc',
-        page: page || 1
-      }
+      url: `${BASE_URL}/discover/movie?api_key=${apiKey}&sort_by=popularity.desc&page=${
+        page || 1
+      }${genreFilter}`,
+      method: 'GET'
     }).pipe(
       map((result) => {
         return result.response as PaginatedResponse<Movie[]>
@@ -32,20 +34,12 @@ export class MoviesService implements MoviesServiceInterface {
   }
 
   getMovie(id: number): Observable<Movie | null> {
-    return fromFetch(`${BASE_URL}/movie/${id}?api_key=${apiKey}&language=en-US`).pipe(
-      mergeMap((response) => {
-        if (response.ok) {
-          return from(response.json() as Promise<Movie>)
-        } else {
-          // handle error
-          return of({ error: true, message: `Error ${response.status}` })
-        }
-      }),
+    return ajax.getJSON(`${BASE_URL}/movie/${id}?api_key=${apiKey}&language=en-US`).pipe(
+      map((result) => result as Movie),
       catchError((error) => {
         console.error('Error fetching movie:', error)
         return of(null)
       }),
-      map((result) => (result !== null && !result.error ? (result as Movie) : null)),
       first()
     )
   }

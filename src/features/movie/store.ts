@@ -1,23 +1,25 @@
-// src/features/movie/store.ts
-import type { Movie, Genre, PaginatedResponse } from './types'
+// store.ts
+import type { Movie, PaginatedResponse } from './types'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { MoviesService } from './services/moviesService'
 import type { Observable } from 'rxjs'
+import { useGenreStore } from '../genre/store'
 
 export const useMovieStore = defineStore('movies', () => {
   const moviesService = new MoviesService()
 
-  const movies = ref<Movie[]>([])
+  const allMovies = ref<Movie[]>([])
   const page = ref(1)
   const totalPages = ref(0)
 
   const loadMovies = async () => {
-    if (movies.value?.length && movies.value.length > 0) {
+    const genreStore = useGenreStore()
+    if (allMovies.value?.length && allMovies.value.length > 0) {
       return
     }
-    moviesService.getMovies().subscribe((response) => {
-      movies.value = response.results
+    moviesService.getMovies(1, genreStore.selectedGenre).subscribe((response) => {
+      allMovies.value = response.results
       page.value = response.page
       totalPages.value = response.total_pages
     })
@@ -28,18 +30,17 @@ export const useMovieStore = defineStore('movies', () => {
   }
 
   const fetchNextPage = async () => {
+    const genreStore = useGenreStore()
     if (page.value === totalPages.value) {
       return
     }
-    moviesService.getMovies(page.value + 1).subscribe((response) => {
-      movies.value = [...movies.value, ...response.results]
-      page.value = response.page
-      totalPages.value = response.total_pages
-    })
-  }
-
-  const getGenres = (): Observable<Genre[]> => {
-    return moviesService.getGenres()
+    moviesService
+      .getMovies(page.value + 1, genreStore.selectedGenre.value)
+      .subscribe((response) => {
+        allMovies.value = [...allMovies.value, ...response.results]
+        page.value = response.page
+        totalPages.value = response.total_pages
+      })
   }
 
   const searchMovies = (query: string): Observable<PaginatedResponse<Movie[]>> => {
@@ -47,16 +48,27 @@ export const useMovieStore = defineStore('movies', () => {
   }
 
   const updateMovies = (newMovies: Movie[]) => {
-    movies.value = newMovies
+    allMovies.value = newMovies
   }
 
+  const filteredMovies = computed(() => {
+    const genreStore = useGenreStore()
+
+    if (genreStore.selectedGenre.length === 0) {
+      return allMovies.value
+    }
+
+    return allMovies.value.filter((movie) =>
+      movie.genre_ids.some((id) => genreStore.selectedGenre.map((genre) => genre.id).includes(id))
+    )
+  })
+
   return {
-    movies,
+    movies: filteredMovies,
     page,
     totalPages,
     loadMovies,
     getMovie,
-    getGenres,
     fetchNextPage,
     searchMovies,
     updateMovies

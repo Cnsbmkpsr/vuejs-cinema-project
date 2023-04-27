@@ -6,7 +6,7 @@
       props.isSelected ? 'border-white bg-white' : 'border-black bg-transparent-full'
     ]"
   >
-    {{ props.title }}
+    {{ props.title.name }}
     <img
       :src="props.isSelected ? '/imgs/close-badge-icon.svg' : '/imgs/add-badge-icon.svg'"
       class="h-5 w-5 lg:h-6 lg:w-6"
