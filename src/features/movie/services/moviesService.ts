@@ -44,6 +44,30 @@ export class MoviesService implements MoviesServiceInterface {
     )
   }
 
+  searchMovies(query: string, page?: number): Observable<PaginatedResponse<Movie[]>> {
+    if (!query) {
+      return of({ page: 1, results: [], total_pages: 0, total_results: 0 })
+    }
+
+    return ajax({
+      url: `${BASE_URL}/search/movie`,
+      queryParams: {
+        api_key: apiKey,
+        query,
+        page: page || 1
+      }
+    }).pipe(
+      map((result) => {
+        return result.response as PaginatedResponse<Movie[]>
+      }),
+      catchError((error) => {
+        console.error('Error searching movies:', error)
+        return of({ page: 1, results: [], total_pages: 0, total_results: 0 })
+      }),
+      first()
+    )
+  }
+
   // Je suis progressiste alors j'ai mis une fonction pour récupérer les genres
   getGenres(): Observable<Genre[]> {
     return ajax({

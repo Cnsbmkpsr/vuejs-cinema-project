@@ -9,11 +9,7 @@
       <div class="h-48 overflow-visible w-1/2">
         <img
           class="rounded-3xl shadow-lg"
-          :src="
-            movie.poster_path
-              ? 'https://image.tmdb.org/t/p/w300/' + movie.poster_path
-              : '/path/to/default-image.jpg'
-          "
+          :src="'https://image.tmdb.org/t/p/w300/' + movie.poster_path"
           alt="Movie Poster"
         />
       </div>
@@ -22,12 +18,10 @@
           <h2 class="text-3xl font-bold">{{ movie.title }}</h2>
           <div class="bg-yellow-400 font-bold rounded-xl p-2">{{ movie.vote_average }}</div>
         </div>
-        <div class="flex flex-col w-1/2 space-y-4">
-          <div>
-            <div class="text-sm text-gray-400">{{ movie.media_type }}</div>
-            <div class="text-lg text-gray-800">
-              {{ movie.release_date ? movie.release_date.substring(0, 4) : '' }}
-            </div>
+        <div>
+          <div class="text-sm text-gray-400">{{ movie.media_type }}</div>
+          <div class="text-lg text-gray-800">
+            {{ movie.release_date?.substring(0, 4) }}
           </div>
         </div>
         <p class="text-gray-400 max-h-40 overflow-y-hidden">
