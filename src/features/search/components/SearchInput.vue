@@ -1,13 +1,15 @@
 <template>
-  <div class="border-gray-950 border-4 rounded-[24px] p-4 gap-2 flex items-center overflow-hidden">
+  <div
+    class="flex w-full items-center gap-2 overflow-hidden rounded-2xl border-[3px] border-gray-950 p-2.5 lg:w-auto lg:rounded-[24px] lg:border-4 lg:p-4"
+  >
     <input
       type="text"
       name="search"
-      class="text-2xl placeholder:text-gray-800 outline-none"
+      class="flex-1 text-xl outline-none placeholder:text-gray-800 lg:text-2xl"
       placeholder="Search..."
       ref="inputRef"
     />
-    <img src="/imgs/search-icon.svg" alt="search" class="w-8 h-8" />
+    <img src="/imgs/search-icon.svg" alt="search" class="h-8 w-8" />
   </div>
 </template>
 
