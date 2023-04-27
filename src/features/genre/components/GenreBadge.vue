@@ -6,7 +6,7 @@
       props.isSelected ? 'border-white bg-white' : 'border-black bg-transparent-full'
     ]"
   >
-    {{ props.title }}
+    {{ genre.name }}
     <img
       :src="props.isSelected ? '/imgs/close-badge-icon.svg' : '/imgs/add-badge-icon.svg'"
       class="h-5 w-5 lg:h-6 lg:w-6"
@@ -17,9 +17,10 @@
 
 <script setup lang="ts">
 import { useGenreStore } from '../store'
+import type { Genre } from '../types'
 
 const props = defineProps<{
-  title: string
+  genre: Genre
   isSelected: boolean
 }>()
 
@@ -27,9 +28,9 @@ const genreStore = useGenreStore()
 
 const handleToggleGenre = () => {
   if (props.isSelected) {
-    genreStore.unselectGenre(props.title)
+    genreStore.unselectGenre(props.genre)
   } else {
-    genreStore.selectGenre(props.title)
+    genreStore.selectGenre(props.genre)
   }
 }
 </script>

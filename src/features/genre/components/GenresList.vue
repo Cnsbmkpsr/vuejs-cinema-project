@@ -2,8 +2,8 @@
   <div class="flex gap-2 overflow-x-auto pb-0.5">
     <GenreBadge
       v-for="genre in genresStore.genres"
-      :key="genre"
-      :title="genre"
+      :key="genre.id"
+      :genre="genre"
       :isSelected="genresStore.isSelected(genre)"
     />
   </div>
