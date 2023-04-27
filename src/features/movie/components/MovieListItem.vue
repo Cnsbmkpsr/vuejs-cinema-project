@@ -1,44 +1,38 @@
-<!-- MovieListItem.vue -->
 <template>
   <div
     @click="goToMovieDetails"
-    class="col-span-2 scale-100 py-16 sm:mx-auto sm:max-w-xl md:scale-100 lg:col-span-1 lg:scale-90 xl:scale-100"
+    class="py-16 col-span-2 lg:col-span-1 xl:scale-100 lg:scale-90 md:scale-100 scale-100 sm:max-w-xl sm:mx-auto"
   >
     <div
-      class="flex max-h-80 space-x-8 border border-gray-100 bg-white p-8 shadow-lg transition-all duration-300 hover:cursor-pointer hover:shadow-2xl sm:rounded-3xl"
+      class="bg-white transition-all duration-300 shadow-lg hover:shadow-2xl hover:cursor-pointer border-gray-100 max-h-80 border sm:rounded-3xl p-8 flex space-x-8"
     >
-      <div class="h-48 w-1/2 overflow-visible">
+      <div class="h-48 overflow-visible w-1/2">
         <img
           class="rounded-3xl shadow-lg"
-          :src="'https://image.tmdb.org/t/p/w300/' + movie.poster_path"
+          :src="
+            movie.poster_path
+              ? 'https://image.tmdb.org/t/p/w300/' + movie.poster_path
+              : '/path/to/default-image.jpg'
+          "
           alt="Movie Poster"
         />
       </div>
-      <div class="flex w-1/2 flex-col space-y-4">
-        <div class="flex items-start justify-between">
+      <div class="flex flex-col w-1/2 space-y-4">
+        <div class="flex justify-between items-start">
           <h2 class="text-3xl font-bold">{{ movie.title }}</h2>
-          <div class="rounded-xl bg-yellow-400 p-2 font-bold">{{ movie.vote_average }}</div>
+          <div class="bg-yellow-400 font-bold rounded-xl p-2">{{ movie.vote_average }}</div>
         </div>
         <div class="flex flex-col w-1/2 space-y-4">
-          <div class="flex justify-between items-start">
-            <h2 class="text-3xl font-bold">{{ movie.title }}</h2>
-            <div class="bg-yellow-400 font-bold rounded-xl p-2">{{ movie.vote_average }}</div>
-          </div>
           <div>
             <div class="text-sm text-gray-400">{{ movie.media_type }}</div>
             <div class="text-lg text-gray-800">
-              {{ movie.release_date?.substring(0, 4) }}
+              {{ movie.release_date ? movie.release_date.substring(0, 4) : '' }}
             </div>
           </div>
-          <p class="text-gray-400 max-h-40 overflow-y-hidden">
-            {{ movie.overview }}
-          </p>
         </div>
-        <<<<<<< HEAD
-        <p class="max-h-40 overflow-y-hidden text-gray-400">
+        <p class="text-gray-400 max-h-40 overflow-y-hidden">
           {{ movie.overview }}
         </p>
-        ======= >>>>>>> 5cd4694 (Feat: User can click on a movie and see details)
       </div>
     </div>
   </div>
@@ -64,7 +58,6 @@ export default defineComponent({
     }
 
     return {
-      movie: props.movie,
       goToMovieDetails
     }
   }

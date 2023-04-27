@@ -1,7 +1,8 @@
+// src/features/movie/services/moviesService.ts
+
 import { first, from, of, type Observable } from 'rxjs'
 import { ajax } from 'rxjs/ajax'
 
-// MoviesService.ts
 import type { Genre, Movie, MoviesServiceInterface, PaginatedResponse } from '../types'
 import { fromFetch } from 'rxjs/fetch'
 import { catchError, map, mergeMap, filter } from 'rxjs/operators'
@@ -64,6 +65,30 @@ export class MoviesService implements MoviesServiceInterface {
       catchError((error) => {
         console.error('Error fetching genres:', error)
         return []
+      }),
+      first()
+    )
+  }
+
+  searchMovies = (query: string, page?: number): Observable<PaginatedResponse<Movie[]>> => {
+    if (!query) {
+      return of({ page: 1, results: [], total_pages: 0, total_results: 0 })
+    }
+
+    return ajax({
+      url: `${BASE_URL}/search/movie`,
+      queryParams: {
+        api_key: apiKey,
+        query,
+        page: page || 1
+      }
+    }).pipe(
+      map((result) => {
+        return result.response as PaginatedResponse<Movie[]>
+      }),
+      catchError((error) => {
+        console.error('Error searching movies:', error)
+        return of({ page: 1, results: [], total_pages: 0, total_results: 0 })
       }),
       first()
     )

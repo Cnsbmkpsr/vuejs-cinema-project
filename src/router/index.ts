@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import MovieDetails from '../views/MovieDetails.vue'
+import MoviesDetailsView from '../views/MoviesDetailsView.vue'
 
 export default createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,7 +13,7 @@ export default createRouter({
     {
       path: '/movie/:id',
       name: 'MovieDetails',
-      component: MovieDetails
+      component: MoviesDetailsView
     }
   ]
 })

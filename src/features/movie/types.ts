@@ -1,3 +1,5 @@
+// src/features/movie/types.ts
+
 import type { Observable } from 'rxjs'
 
 export type Movie = {

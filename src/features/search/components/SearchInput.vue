@@ -1,3 +1,4 @@
+// src/features/search/components/SearchInput.vue
 <template>
   <div
     class="flex w-full items-center gap-2 overflow-hidden rounded-2xl border-[3px] border-gray-950 p-2.5 lg:w-auto lg:rounded-[24px] lg:border-4 lg:p-4"
@@ -14,22 +15,36 @@
 </template>
 
 <script setup lang="ts">
+import { debounceTime, distinctUntilChanged, filter, fromEvent, map, switchMap, tap } from 'rxjs'
 import { ref, watchEffect } from 'vue'
-import { inputDebounce$ } from '../utils/inputDebounce'
+import { useMovieStore } from '../../movie/store'
 
 const emit = defineEmits(['debouncedSearch'])
 
 const inputRef = ref<HTMLInputElement>()
+const movieStore = useMovieStore()
 
 watchEffect(() => {
   if (!inputRef.value) return
 
-  const inputRefSubscription = inputDebounce$(inputRef.value).subscribe((value) => {
-    emit('debouncedSearch', value)
-  })
+  const inputObservable = fromEvent(inputRef.value, 'input').pipe(
+    map((event: Event) => (event.target as HTMLInputElement).value),
+    filter((value: string) => value.length >= 3 || value.length === 0),
+    debounceTime(500),
+    distinctUntilChanged(),
+    switchMap((value: string) =>
+      movieStore.searchMovies(value).pipe(map((results) => ({ results, query: value })))
+    ),
+    tap(({ results, query }) => {
+      console.log('Search results:', results)
+      emit('debouncedSearch', { searchResults: results.results, query: query })
+    })
+  )
+
+  const subscription = inputObservable.subscribe()
 
   return () => {
-    inputRefSubscription.unsubscribe()
+    subscription.unsubscribe()
   }
 })
 </script>
