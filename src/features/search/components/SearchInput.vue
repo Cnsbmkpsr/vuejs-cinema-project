@@ -1,3 +1,4 @@
+// src/features/search/components/SearchInput.vue
 <template>
   <div
     class="flex w-full items-center gap-2 overflow-hidden rounded-2xl border-[3px] border-gray-950 p-2.5 lg:w-auto lg:rounded-[24px] lg:border-4 lg:p-4"
@@ -31,9 +32,12 @@ watchEffect(() => {
     filter((value: string) => value.length >= 3 || value.length === 0),
     debounceTime(500),
     distinctUntilChanged(),
-    switchMap((value: string) => movieStore.searchMovies(value)),
-    tap((results) => {
-      emit('debouncedSearch', results)
+    switchMap((value: string) =>
+      movieStore.searchMovies(value).pipe(map((results) => ({ results, query: value })))
+    ),
+    tap(({ results, query }) => {
+      console.log('Search results:', results)
+      emit('debouncedSearch', { searchResults: results.results, query: query })
     })
   )
 

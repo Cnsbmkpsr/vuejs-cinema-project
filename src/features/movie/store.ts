@@ -1,5 +1,5 @@
-// store.ts
-import type { Movie } from './types'
+// src/features/movie/store.ts
+import type { Movie, Genre, PaginatedResponse } from './types'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { MoviesService } from './services/moviesService'
@@ -42,7 +42,7 @@ export const useMovieStore = defineStore('movies', () => {
     return moviesService.getGenres()
   }
 
-  const searchMovies = (query: string): Observable<Movie[]> => {
+  const searchMovies = (query: string): Observable<PaginatedResponse<Movie[]>> => {
     return moviesService.searchMovies(query)
   }
 

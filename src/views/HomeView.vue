@@ -1,9 +1,11 @@
+// src/views/HomeView.vue
 <template>
   <TheHeader title="Movies">
     <template v-slot:search>
-      <SearchInput @debounced-search="handleSearch($event)" />
+      <SearchInput @debounced-search="handleSearch($event.searchResults, $event.query)" />
     </template>
   </TheHeader>
+
   <div class="my-4">
     <GenresList />
   </div>
@@ -11,7 +13,6 @@
     <MovieListItem v-for="movie in movieStore.movies" :key="movie.id" :movie="movie" />
   </div>
 </template>
-
 <script setup lang="ts">
 import { ref } from 'vue'
 import MovieListItem from '../features/movie/components/MovieListItem.vue'
@@ -31,9 +32,9 @@ const genresStore = useGenreStore()
 movieStore.loadMovies()
 genresStore.loadGenres()
 
-const handleSearch = (searchResults: Movie[]) => {
-  if (searchResults.length === 0) {
-    movieStore.loadMovies()
+const handleSearch = async (searchResults: Movie[], query: string) => {
+  if (query === '') {
+    await movieStore.loadMovies()
   } else {
     movieStore.updateMovies(searchResults)
   }
