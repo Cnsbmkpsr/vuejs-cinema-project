@@ -1,7 +1,3 @@
-// src/features/movie/types.ts
-
-import type { Observable } from 'rxjs'
-
 export type Movie = {
   id: number
   title: string
@@ -35,7 +31,16 @@ export type Genre = {
 
 export type TVSeries = Movie
 
+export type SortTypes = 'popularity' | 'vote_average' | 'release_date'
+export type SortOrders = 'asc' | 'desc'
+export type Sorts = `${SortTypes}.${SortOrders}`
+
 export interface MoviesServiceInterface {
-  getMovies(page?: number): Observable<PaginatedResponse<Movie[]>>
-  getMovie(id: number): Observable<Movie | null>
+  getMovies(args: {
+    page?: number
+    genres?: number[]
+    sortBy?: Sorts
+  }): Promise<PaginatedResponse<Movie[]>>
+  getMovie(id: number): Promise<Movie | null>
+  searchMovies(args: { query: string; page?: number }): Promise<PaginatedResponse<Movie[]>>
 }
