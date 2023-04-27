@@ -1,40 +1,31 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { Genre } from './types'
-import { MoviesService } from '../movie/services/moviesService'
+import { useInject } from '../../container.config'
+import { GenreService } from './services/genreService'
 
 export const useGenreStore = defineStore('genres', () => {
+  const genreService = useInject(GenreService)
+
   const genres = ref<Genre[]>([])
-  const selectedGenre = ref<Genre[]>([])
-  const moviesService = new MoviesService()
+  const selectedGenres = ref<number[]>([])
 
   const loadGenres = async () => {
-    genres.value = [
-      'Action',
-      'Adventure',
-      'Animation',
-      'Comedy',
-      'Crime',
-      'Documentary',
-      'Drama',
-      'Family',
-      'Fantasy',
-      'History'
-    ]
-    // TODO : load genres from the moviesService
+    const { genres: resGenres } = await genreService.getGenres()
+    genres.value = resGenres
   }
 
   const selectGenre = (genre: Genre) => {
-    selectedGenre.value = [...selectedGenre.value, genre]
+    selectedGenres.value = [...selectedGenres.value, genre.id]
   }
 
   const unselectGenre = (genre: Genre) => {
-    selectedGenre.value = selectedGenre.value.filter((g) => g !== genre)
+    selectedGenres.value = selectedGenres.value.filter((g) => g !== genre.id)
   }
 
   const isSelected = (genre: Genre) => {
-    return selectedGenre.value.includes(genre)
+    return selectedGenres.value.includes(genre.id)
   }
 
-  return { genres, loadGenres, selectGenre, unselectGenre, isSelected }
+  return { genres, selectedGenres, loadGenres, selectGenre, unselectGenre, isSelected }
 })
