@@ -2,14 +2,14 @@
   <div
     @click="handleToggleGenre()"
     :class="[
-      'rounded-full text-gray-950 flex items-center border-[3px] shrink-0 text-2xl pr-2 pl-2.5 py-1 gap-2 hover:cursor-pointer',
-      props.isSelected ? 'bg-white border-white' : 'bg-transparent-full border-black'
+      'flex shrink-0 items-center gap-1 rounded-full border-2 py-1 pl-2 pr-1.5 text-xl text-gray-950 hover:cursor-pointer lg:gap-2 lg:border-[3px] lg:py-1 lg:pl-2.5 lg:pr-2 lg:text-2xl',
+      props.isSelected ? 'border-white bg-white' : 'border-black bg-transparent-full'
     ]"
   >
     {{ props.title }}
     <img
       :src="props.isSelected ? '/imgs/close-badge-icon.svg' : '/imgs/add-badge-icon.svg'"
-      class="h-6 w-6"
+      class="h-5 w-5 lg:h-6 lg:w-6"
       alt="Badge action icon"
     />
   </div>

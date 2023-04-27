@@ -1,22 +1,22 @@
 <!-- MovieListItem.vue -->
 <template>
   <div
-    class="py-16 col-span-2 lg:col-span-1 xl:scale-100 lg:scale-90 md:scale-100 scale-100 sm:max-w-xl sm:mx-auto"
+    class="col-span-2 scale-100 py-16 sm:mx-auto sm:max-w-xl md:scale-100 lg:col-span-1 lg:scale-90 xl:scale-100"
   >
     <div
-      class="bg-white transition-all duration-300 shadow-lg hover:shadow-2xl hover:cursor-pointer border-gray-100 max-h-80 border sm:rounded-3xl p-8 flex space-x-8"
+      class="flex max-h-80 space-x-8 border border-gray-100 bg-white p-8 shadow-lg transition-all duration-300 hover:cursor-pointer hover:shadow-2xl sm:rounded-3xl"
     >
-      <div class="h-48 overflow-visible w-1/2">
+      <div class="h-48 w-1/2 overflow-visible">
         <img
           class="rounded-3xl shadow-lg"
           :src="'https://image.tmdb.org/t/p/w300/' + movie.poster_path"
           alt="Movie Poster"
         />
       </div>
-      <div class="flex flex-col w-1/2 space-y-4">
-        <div class="flex justify-between items-start">
+      <div class="flex w-1/2 flex-col space-y-4">
+        <div class="flex items-start justify-between">
           <h2 class="text-3xl font-bold">{{ movie.title }}</h2>
-          <div class="bg-yellow-400 font-bold rounded-xl p-2">{{ movie.vote_average }}</div>
+          <div class="rounded-xl bg-yellow-400 p-2 font-bold">{{ movie.vote_average }}</div>
         </div>
         <div>
           <div class="text-sm text-gray-400">{{ movie.media_type }}</div>
@@ -24,7 +24,7 @@
             {{ movie.release_date?.substring(0, 4) }}
           </div>
         </div>
-        <p class="text-gray-400 max-h-40 overflow-y-hidden">
+        <p class="max-h-40 overflow-y-hidden text-gray-400">
           {{ movie.overview }}
         </p>
       </div>

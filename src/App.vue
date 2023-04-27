@@ -17,4 +17,10 @@ body {
   width: 95%;
   margin: auto;
 }
+
+@media (max-width: 1024px) {
+  #app {
+    width: 100%;
+  }
+}
 </style>

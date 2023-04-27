@@ -1,9 +1,9 @@
 <template>
-  <div class="bg-white rounded-[48px] w-full px-12 py-10 flex justify-between">
-    <h1 class="text-7xl">{{ props.title }}</h1>
-    <div class="">
-      <slot name="search" />
-    </div>
+  <div
+    class="flex w-full flex-col items-center justify-between gap-4 rounded-none bg-white px-8 py-8 lg:flex-row lg:gap-0 lg:rounded-[48px] lg:px-12 lg:py-10"
+  >
+    <h1 class="text-5xl lg:text-7xl">{{ props.title }}</h1>
+    <slot name="search" />
   </div>
 </template>
 
