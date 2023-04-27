@@ -26,9 +26,14 @@ export type PaginatedResponse<T> = {
   total_results: number
 }
 
+export type Genre = {
+  id: number
+  name: string
+}
+
 export type TVSeries = Movie
 
 export interface MoviesServiceInterface {
   getMovies(page?: number): Observable<PaginatedResponse<Movie[]>>
-  getMovie(id: number): Observable<Movie>
+  getMovie(id: number): Observable<Movie | null>
 }

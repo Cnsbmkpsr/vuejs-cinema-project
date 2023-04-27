@@ -3,6 +3,7 @@ import type { Movie } from './types'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { MoviesService } from './services/moviesService'
+import type { Observable } from 'rxjs'
 
 export const useMovieStore = defineStore('movies', () => {
   const moviesService = new MoviesService()
@@ -22,6 +23,10 @@ export const useMovieStore = defineStore('movies', () => {
     })
   }
 
+  const getMovie = (id: number): Observable<Movie | null> => {
+    return moviesService.getMovie(id)
+  }
+
   const fetchNextPage = async () => {
     if (page.value === totalPages.value) {
       return
@@ -33,11 +38,17 @@ export const useMovieStore = defineStore('movies', () => {
     })
   }
 
+  const getGenres = (): Observable<Genre[]> => {
+    return moviesService.getGenres()
+  }
+
   return {
     movies,
     page,
     totalPages,
     loadMovies,
+    getMovie,
+    getGenres,
     fetchNextPage
   }
 })
