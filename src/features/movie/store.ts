@@ -1,14 +1,18 @@
 // src/features/movie/store.ts
-import type { Movie, Genre, PaginatedResponse } from './types'
+import type { Movie } from './types'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { MoviesService } from './services/moviesService'
-import type { Observable } from 'rxjs'
+import { useInject } from '../../container.config'
+import { useGenreStore } from '../genre/store'
 
 export const useMovieStore = defineStore('movies', () => {
-  const moviesService = new MoviesService()
+  const moviesService = useInject(MoviesService)
+  const genreStore = useGenreStore()
 
+  const searchQuery = ref<string>('')
   const movies = ref<Movie[]>([])
+  const movieDetails = ref<Movie | null>(null)
   const page = ref(1)
   const totalPages = ref(0)
 
@@ -16,49 +20,75 @@ export const useMovieStore = defineStore('movies', () => {
     if (movies.value?.length && movies.value.length > 0) {
       return
     }
-    moviesService.getMovies().subscribe((response) => {
-      movies.value = response.results
-      page.value = response.page
-      totalPages.value = response.total_pages
-    })
+    const { page: resPage, results, total_pages } = await moviesService.getMovies({})
+
+    movies.value = results
+    page.value = resPage
+    totalPages.value = total_pages
   }
 
-  const getMovie = (id: number): Observable<Movie | null> => {
-    return moviesService.getMovie(id)
+  const getMovie = async (id: number) => {
+    const movie = await moviesService.getMovie(id)
+    movieDetails.value = movie
   }
 
-  const fetchNextPage = async () => {
-    if (page.value === totalPages.value) {
-      return
-    }
-    moviesService.getMovies(page.value + 1).subscribe((response) => {
-      movies.value = [...movies.value, ...response.results]
-      page.value = response.page
-      totalPages.value = response.total_pages
-    })
+  const setPage = async (newPage: number) => {
+    const resMovies =
+      searchQuery.value !== ''
+        ? await moviesService.searchMovies({
+            query: searchQuery.value,
+            page: newPage
+          })
+        : await moviesService.getMovies({
+            genres: genreStore.selectedGenres,
+            page: newPage
+          })
+
+    movies.value = [...movies.value, ...resMovies.results]
+    page.value = resMovies.page
+    totalPages.value = resMovies.total_pages
   }
 
-  const getGenres = (): Observable<Genre[]> => {
-    return moviesService.getGenres()
+  const setSearchQuery = async (query: string) => {
+    searchQuery.value = query
+
+    const resMovies =
+      query !== ''
+        ? await moviesService.searchMovies({
+            query
+          })
+        : await moviesService.getMovies({
+            genres: genreStore.selectedGenres
+          })
+
+    movies.value = resMovies.results
+    page.value = resMovies.page
+    totalPages.value = resMovies.total_pages
   }
 
-  const searchMovies = (query: string): Observable<PaginatedResponse<Movie[]>> => {
-    return moviesService.searchMovies(query)
-  }
+  watchEffect(async () => {
+    const resMovies =
+      searchQuery.value !== ''
+        ? await moviesService.searchMovies({
+            query: searchQuery.value
+          })
+        : await moviesService.getMovies({
+            genres: genreStore.selectedGenres
+          })
 
-  const updateMovies = (newMovies: Movie[]) => {
-    movies.value = newMovies
-  }
+    movies.value = resMovies.results
+    page.value = resMovies.page
+    totalPages.value = resMovies.total_pages
+  })
 
   return {
     movies,
     page,
+    searchQuery,
     totalPages,
     loadMovies,
     getMovie,
-    getGenres,
-    fetchNextPage,
-    searchMovies,
-    updateMovies
+    setPage,
+    setSearchQuery
   }
 })

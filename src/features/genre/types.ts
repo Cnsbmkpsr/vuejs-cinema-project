@@ -1,1 +1,5 @@
-export type Genre = string
+export type Genre = { name: string; id: number }
+
+export interface GenreServiceInterface {
+  getGenres(): Promise<{ genres: Genre[] }>
+}

@@ -15,11 +15,9 @@
 </template>
 
 <script setup lang="ts">
-import { debounceTime, distinctUntilChanged, filter, fromEvent, map, switchMap, tap } from 'rxjs'
 import { ref, watchEffect } from 'vue'
 import { useMovieStore } from '../../movie/store'
-
-const emit = defineEmits(['debouncedSearch'])
+import { inputDebounce$ } from '../utils/inputDebounce'
 
 const inputRef = ref<HTMLInputElement>()
 const movieStore = useMovieStore()
@@ -27,24 +25,12 @@ const movieStore = useMovieStore()
 watchEffect(() => {
   if (!inputRef.value) return
 
-  const inputObservable = fromEvent(inputRef.value, 'input').pipe(
-    map((event: Event) => (event.target as HTMLInputElement).value),
-    filter((value: string) => value.length >= 3 || value.length === 0),
-    debounceTime(500),
-    distinctUntilChanged(),
-    switchMap((value: string) =>
-      movieStore.searchMovies(value).pipe(map((results) => ({ results, query: value })))
-    ),
-    tap(({ results, query }) => {
-      console.log('Search results:', results)
-      emit('debouncedSearch', { searchResults: results.results, query: query })
-    })
-  )
-
-  const subscription = inputObservable.subscribe()
+  const inputRefSubscription = inputDebounce$(inputRef.value).subscribe((value) => {
+    movieStore.setSearchQuery(value)
+  })
 
   return () => {
-    subscription.unsubscribe()
+    inputRefSubscription.unsubscribe()
   }
 })
 </script>
