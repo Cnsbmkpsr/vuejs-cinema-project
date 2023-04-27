@@ -1,5 +1,6 @@
 <template>
   <div
+    @click="goToMovieDetails"
     class="py-16 col-span-2 lg:col-span-1 xl:scale-100 lg:scale-90 md:scale-100 scale-100 sm:max-w-xl sm:mx-auto"
   >
     <div
