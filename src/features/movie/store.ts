@@ -83,6 +83,7 @@ export const useMovieStore = defineStore('movies', () => {
 
   return {
     movies,
+    movieDetails,
     page,
     searchQuery,
     totalPages,
